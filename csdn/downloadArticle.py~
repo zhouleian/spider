@@ -103,6 +103,7 @@ fileArticle.write('***************文章题目***************文章地址*******
 url = raw_input('Input the links of CSDN article you needed!\n')
 if url is None or len(url) == 0:
     url = 'http://blog.csdn.net/eastmount'
+    #url = "http://blog.csdn.net/nealgavin/article/details/27110717"
 browser = BrowserBase()
 #取得url的页面代码
 browser.openurl(url)
