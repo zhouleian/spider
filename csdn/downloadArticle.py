@@ -3,6 +3,7 @@
 from bs4 import BeautifulSoup
 import re,socket,urllib2,random
 import cookielib
+import tool
 ERROR = {
     '0': 'Can not open the url,checck you net',
     '1': 'Creat download dir error',
@@ -21,6 +22,7 @@ class BrowserBase(object):
         self.link = ''
         self.fileArticle = fileArticle
         self.url = url
+        self.tool = tool.Tool()
 
     def speak(self, name, content):
         print '[%s]%s' % (name, content)
@@ -51,8 +53,6 @@ class BrowserBase(object):
         try:
             res = self.opener.open(url)
             return res.read()
-            #self.HTML = res.read()
-        # print res.read()
         except Exception, e:
             self.speak(str(e), url)
             raise Exception
@@ -91,12 +91,15 @@ class BrowserBase(object):
             #爬取文章
             articlePageCode = self.openurl(articleLink)
             soup = BeautifulSoup(articlePageCode)
-            tags = soup.findAll('div', {'id': 'article_content', 'class': 'article_content'})
             #tags:具体文章页面对应的源代码
+            tags = soup.findAll('div', {'id': 'article_content', 'class': 'article_content'})
             articleHtml = str(tags[0])
-            articleHTML = '<html><meta charset="utf-8">' + articleHtml
-            articleFile = open(articleTitle + '.html', 'w+')
-            articleFile.write(articleHTML)
+            articleHTML = '<html><meta charset="utf-8">' + articleHtml #不加这一句在浏览器中的显示是乱码
+            #articleFile = open(articleTitle + '.html', 'w+')
+            #articleFile.write(articleHTML)
+            articleContents = self.tool.replace(articleHTML)
+            articleFile = open(articleTitle + '.txt','w+')
+            articleFile.write(articleContents)
 
 fileArticle = open('articleFile.txt','w')
 fileArticle.write('***************文章题目***************文章地址************')
